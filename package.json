@@ -14,7 +14,8 @@
     "cloud-oidc": "node scripts/cli.mjs",
     "secrets": "node scripts/generate-secrets.mjs",
     "setup": "node scripts/setup.mjs",
-    "setup:sso": "node scripts/setup-sso.mjs"
+    "setup:sso": "node scripts/setup-sso.mjs",
+    "openai": "node scripts/openai-admin.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260606.0",

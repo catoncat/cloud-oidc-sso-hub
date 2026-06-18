@@ -124,6 +124,49 @@ npm run setup:sso -- \
 
 Cloudflare 自动化需要 `CLOUDFLARE_API_TOKEN`，或 `CLOUDFLARE_EMAIL` + `CLOUDFLARE_GLOBAL_API_KEY`。Wrangler deploy 可以使用已有 `wrangler login`，但 KV/DNS 自动化需要 Cloudflare API 凭据。
 
+## OpenAI Admin Bootstrap
+
+`cloud-oidc openai bootstrap` 是给本机 agent 使用的一条龙入口。它复用当前 macOS Google Chrome 登录态，不启动 headless，也不新建浏览器 profile。
+
+```bash
+OIDC_PIN="abc123" npm run cloud-oidc -- openai bootstrap \
+  --domain pokeface.0day3.com \
+  --zone 0day3.com \
+  --cf-envchain cf-migrate-target
+```
+
+它会按顺序执行：
+
+- 打开当前 Chrome 的 `admin.openai.com` 访问控制页面
+- 添加并验证 OpenAI 域名
+- 读取 OpenAI 给出的 DNS TXT，并写入 Cloudflare
+- 打开或创建 ChatGPT Custom OIDC SSO
+- 抽取 OpenAI callback/setup URL，写回 `config/tenants.json`
+- 运行共享 Worker setup，部署 Worker、DNS、KV 和 secrets
+- 回到 OpenAI Custom OIDC 页面填写 Client ID、Client Secret、Discovery Endpoint
+- 用 Worker PIN 登录完成 OpenAI SSO 测试
+
+常用跳过项：
+
+```bash
+# 只使用现有 callback/setup URL，跳过 OpenAI 域名创建
+npm run cloud-oidc -- openai bootstrap --domain pokeface.0day3.com --zone 0day3.com --skip-domain
+
+# 只准备 OpenAI config，不部署 Worker
+npm run cloud-oidc -- openai bootstrap --domain pokeface.0day3.com --zone 0day3.com --skip-worker
+
+# 只做到 Worker 部署，不填回 OpenAI Step 4
+npm run cloud-oidc -- openai bootstrap --domain pokeface.0day3.com --zone 0day3.com --skip-openai-fill
+```
+
+调试当前浏览器页面：
+
+```bash
+npm run cloud-oidc -- openai snapshot
+```
+
+如果 OpenAI Admin UI 文案或结构变化，脚本会把当前页面快照写到 `.generated/cloud-oidc-sso-hub/openai-admin-*.json`，后续 agent 直接看这个文件补选择器即可。
+
 ## OpenAI Values
 
 把 setup 输出填回 OpenAI Custom OIDC Step 4：

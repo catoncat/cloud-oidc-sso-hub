@@ -27,6 +27,8 @@ async function main() {
       return configCommand(args.slice(1));
     case "setup":
       return runNode("scripts/setup.mjs", args.slice(1));
+    case "openai":
+      return runNode("scripts/openai-admin.mjs", args.slice(1));
     case "deploy":
       return run("npx", ["wrangler", "deploy", "--config", generatedWranglerPath(args.slice(1))]);
     case "token-path":
@@ -51,6 +53,10 @@ Deploy:
   cloud-oidc setup --skip-deploy
   cloud-oidc setup --skip-dns
   cloud-oidc setup --skip-smoke
+
+OpenAI Admin:
+  cloud-oidc openai bootstrap --domain research.example.com --zone example.com --cf-envchain cf-migrate-target
+  cloud-oidc openai snapshot
 
 Secrets:
   export OIDC_PIN='...'
