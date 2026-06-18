@@ -1,0 +1,24 @@
+{
+  "worker_name": "cloud-oidc-sso-hub",
+  "kv_title": "cloud-oidc-sso-hub-auth",
+  "kv_id": "",
+  "account_id": "",
+  "output_dir": ".generated/cloud-oidc-sso-hub",
+  "secrets_dir": ".secrets-cloud-oidc-sso-hub",
+  "tenant_registry": ".generated/cloud-oidc-sso-hub/tenants.json",
+  "client_id": "openai-enterprise-sso",
+  "pin_env": "OIDC_PIN",
+  "admin_token_env": "OIDC_SSO_ADMIN_TOKEN",
+  "invite_code_env": "OIDC_SSO_INVITE_CODE",
+  "tenants": [
+    {
+      "domain": "research.example.com",
+      "zone": "example.com",
+      "callback": "https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback",
+      "setup_url": "https://setup.auth.openai.com/.../sso/conn_YOUR_CONNECTION_ID/custom-oidc",
+      "enabled": true,
+      "configure_dns": true,
+      "smoke": true
+    }
+  ]
+}

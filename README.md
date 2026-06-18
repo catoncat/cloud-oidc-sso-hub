@@ -55,10 +55,36 @@ Worker 会按请求 host 匹配：
 
 ## Setup Script
 
-在本 repo 根目录调用 wrapper：
+配置文件是主入口。真实配置写到 `config/tenants.json`，这个文件不会进入 Git。
 
 ```bash
-scripts/setup_cf_oidc_sso.sh \
+npm run cloud-oidc -- config init
+npm run cloud-oidc -- config add \
+  --domain research.example.com \
+  --zone example.com \
+  --callback "https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback" \
+  --setup-url "https://setup.auth.openai.com/.../sso/conn_YOUR_CONNECTION_ID/custom-oidc"
+```
+
+部署或只生成文件：
+
+```bash
+npm run cloud-oidc -- setup
+npm run cloud-oidc -- setup --skip-deploy
+```
+
+需要固定 secrets 时用环境变量，不要写进 tracked 文件：
+
+```bash
+export OIDC_PIN="..."
+export OIDC_SSO_ADMIN_TOKEN="..."
+export OIDC_SSO_INVITE_CODE="..."
+```
+
+底层单 tenant setup 仍可直接调用：
+
+```bash
+npm run setup:sso -- \
   --domain example.com \
   --callback "https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback" \
   --setup-url "https://setup.auth.openai.com/.../sso/conn_YOUR_CONNECTION_ID/custom-oidc"
@@ -67,7 +93,7 @@ scripts/setup_cf_oidc_sso.sh \
 子域作为 OpenAI 已验证域名时：
 
 ```bash
-scripts/setup_cf_oidc_sso.sh \
+npm run setup:sso -- \
   --domain research.example.com \
   --zone example.com \
   --callback "https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback" \
@@ -88,7 +114,7 @@ scripts/setup_cf_oidc_sso.sh \
 只生成本地文件：
 
 ```bash
-scripts/setup_cf_oidc_sso.sh \
+npm run setup:sso -- \
   --domain example.com \
   --callback "https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback" \
   --connection-id "conn_YOUR_CONNECTION_ID" \

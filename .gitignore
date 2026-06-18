@@ -7,6 +7,7 @@ node_modules/
 .secrets/
 .secrets-*/
 .generated/
+config/tenants.json
 dist/
 wrangler.jsonc
 wrangler.*.jsonc
