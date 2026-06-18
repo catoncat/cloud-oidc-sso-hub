@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "cloud-oidc-sso-hub",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-18",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Optional. If omitted, wrangler deploys to the account selected by `wrangler whoami`.
+  // "account_id": "YOUR_CLOUDFLARE_ACCOUNT_ID",
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+
+  "vars": {
+    // The only non-secret runtime config. Add every tenant here, keyed by issuer host.
+    "TENANT_CONFIGS_JSON": "{\"auth.example.com\":{\"issuer\":\"https://auth.example.com\",\"client_id\":\"openai-enterprise-sso\",\"allowed_email_domain\":\"example.com\",\"allowed_redirect_uri\":\"https://external.auth.openai.com/sso/oidc/YOUR_CALLBACK_ID/callback\",\"zone_name\":\"example.com\",\"shortcut_host\":\"go.example.com\",\"app_login_url\":\"https://chatgpt.com/auth/login?sso=true&connection=YOUR_OPENAI_CONNECTION_ID\",\"idp_name\":\"Example SSO\"}}"
+  },
+
+  // Required secrets:
+  // - CLIENT_SECRET
+  // - GLOBAL_PIN
+  // - ADMIN_TOKEN
+  // - REGISTER_INVITE_CODE
+  // - JWT_PRIVATE_KEY_PEM
+  // - JWT_PUBLIC_JWK_JSON
+
+  "kv_namespaces": [
+    {
+      "binding": "AUTH_KV",
+      "id": "YOUR_KV_NAMESPACE_ID"
+    }
+  ],
+
+  "routes": [
+    {
+      "pattern": "auth.example.com/*",
+      "zone_name": "example.com"
+    },
+    {
+      "pattern": "go.example.com/*",
+      "zone_name": "example.com"
+    }
+  ]
+}

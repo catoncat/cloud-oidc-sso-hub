@@ -1,0 +1,19 @@
+{
+  "name": "cloud-oidc-sso-hub",
+  "version": "0.1.0",
+  "description": "Multi-tenant Cloudflare Workers OIDC provider for OpenAI Custom OIDC SSO.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "secrets": "node scripts/generate-secrets.mjs",
+    "setup:sso": "node scripts/setup-sso.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260606.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.98.0"
+  }
+}
