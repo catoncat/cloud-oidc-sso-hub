@@ -369,7 +369,7 @@ async function apiProvisionResponse(
   };
 
   const params = apiAuthorizeParams(payload, user.email);
-  if (params.client_id || params.redirect_uri || params.scope || params.state || params.nonce) {
+  if (hasAuthorizePayload(payload)) {
     const validation = validateAuthorizeParams(params, env);
     if (validation) {
       return { ok: false, error: validation };
@@ -378,6 +378,10 @@ async function apiProvisionResponse(
   }
 
   return response;
+}
+
+function hasAuthorizePayload(payload: ApiPayload): boolean {
+  return payload.client_id !== undefined || payload.redirect_uri !== undefined;
 }
 
 async function createAuthorizationRedirect(

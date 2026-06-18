@@ -376,9 +376,9 @@ async function createOrGetKvNamespace(api, accountId, title) {
 async function upsertDns(api, zoneId, name) {
   const listed = await cfRequest(api, `/zones/${zoneId}/dns_records?name=${encodeURIComponent(name)}`);
   const records = listed.result || [];
-  const conflicting = records.find((record) => record.type !== "A");
+  const conflicting = records.find((record) => record.type === "CNAME");
   if (conflicting) {
-    throw new Error(`DNS record ${name} already exists as ${conflicting.type}; update it manually or remove it first.`);
+    throw new Error(`DNS record ${name} already exists as CNAME; update it manually or remove it first.`);
   }
   const payload = { type: "A", name, content: DNS_PLACEHOLDER_IP, ttl: 1, proxied: true };
   const existing = records.find((record) => record.type === "A");
